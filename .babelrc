@@ -6,7 +6,8 @@
       "modules": false,
       "targets": {
         "browsers": [ ">0.25%", "ie 11"]
-      }
+      },
+      "useBuiltIns": true
     }]
   ],
   "env": {

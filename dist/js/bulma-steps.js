@@ -85,6 +85,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -258,47 +260,84 @@ var bulmaSteps = function (_EventEmitter) {
     }
   }, {
     key: 'next_step',
-    value: function next_step() {
-      var current_id = this.get_current_step_id();
+    value: function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var current_id, next_id, errors, i;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                current_id = this.get_current_step_id();
 
-      if (current_id == null) {
-        return;
-      }
+                if (!(current_id == null)) {
+                  _context.next = 3;
+                  break;
+                }
 
-      var next_id = current_id + 1,
-          errors = [];
+                return _context.abrupt('return');
 
-      if (typeof this.options.beforeNext != 'undefined' && this.options.beforeNext != null && this.options.beforeNext) {
-        errors = this.options.beforeNext(current_id);
-      }
-      this.emit('bulmasteps:before:next', current_id);
+              case 3:
+                next_id = current_id + 1, errors = [];
 
-      if (typeof errors == 'undefined') {
-        errors = [];
-      }
+                if (!(typeof this.options.beforeNext != 'undefined' && this.options.beforeNext != null && this.options.beforeNext)) {
+                  _context.next = 8;
+                  break;
+                }
 
-      if (errors.length > 0) {
-        this.emit('bulmasteps:errors', errors);
-        for (var i = 0; i < errors.length; i++) {
-          if (typeof this.options.onError != 'undefined' && this.options.onError != null && this.options.onError) {
-            this.options.onError(errors[i]);
+                _context.next = 7;
+                return this.options.beforeNext(current_id);
+
+              case 7:
+                errors = _context.sent;
+
+              case 8:
+                this.emit('bulmasteps:before:next', current_id);
+
+                if (typeof errors == 'undefined') {
+                  errors = [];
+                }
+
+                if (!(errors.length > 0)) {
+                  _context.next = 14;
+                  break;
+                }
+
+                this.emit('bulmasteps:errors', errors);
+                for (i = 0; i < errors.length; i++) {
+                  if (typeof this.options.onError != 'undefined' && this.options.onError != null && this.options.onError) {
+                    this.options.onError(errors[i]);
+                  }
+                }
+
+                return _context.abrupt('return');
+
+              case 14:
+
+                if (next_id >= this.steps.length - 1) {
+                  if (typeof this.options.onFinish != 'undefined' && this.options.onFinish != null && this.options.onFinish) {
+                    this.options.onFinish(current_id);
+                  }
+                  this.emit('bulmasteps:finish', current_id);
+                }
+                if (next_id < this.steps.length) {
+                  this.complete_step(current_id);
+                  this.activate_step(next_id);
+                }
+
+              case 16:
+              case 'end':
+                return _context.stop();
+            }
           }
-        }
+        }, _callee, this);
+      }));
 
-        return;
+      function next_step() {
+        return _ref.apply(this, arguments);
       }
 
-      if (next_id >= this.steps.length - 1) {
-        if (typeof this.options.onFinish != 'undefined' && this.options.onFinish != null && this.options.onFinish) {
-          this.options.onFinish(current_id);
-        }
-        this.emit('bulmasteps:finish', current_id);
-      }
-      if (next_id < this.steps.length) {
-        this.complete_step(current_id);
-        this.activate_step(next_id);
-      }
-    }
+      return next_step;
+    }()
   }, {
     key: 'previous_step',
     value: function previous_step() {
